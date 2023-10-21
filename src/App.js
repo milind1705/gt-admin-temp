@@ -1,23 +1,24 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
-
+import Pagiation from './Components/Pagiation';
+import UsersTable from './Components/UsersTable'; 
+import { useUserList } from './Data/data-fetch';
+import { Searchbox } from './Components/Searchbox';
 function App() {
+  const [skip, setSkip] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [tableData, setTableData] = useState([]);
+  const {userList} = useUserList();
+  useEffect(()=>{
+    setTableData(userList)
+  },[userList]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <Searchbox data={userList} setTableData={setTableData}/>
+    <UsersTable skip={skip} limit={limit} tableData={tableData} />
+    <Pagiation setCurrentPage={setCurrentPage} setLimit={setLimit} setSkip={setSkip} currentPage={currentPage} tableData={tableData} />
     </div>
   );
 }
